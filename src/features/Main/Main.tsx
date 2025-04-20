@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from 'react'
+import { useState, ChangeEvent, useMemo, useRef, useEffect } from 'react'
 
 type AspectRatio = '1:1' | '1.91:1' | '4:5'
 
@@ -6,6 +6,8 @@ export const Main = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [selectedRatio, setSelectedRatio] = useState<AspectRatio>('1:1')
   const [slides, setSlides] = useState(3)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [frameStyle, setFrameStyle] = useState<{ width?: string; height?: string }>({})
 
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -21,6 +23,52 @@ export const Main = () => {
       setSlides(value)
     }
   }
+
+  const frameRatio = useMemo(() => {
+    const ratioMap = {
+      '1:1': { width: 1, height: 1 },
+      '1.91:1': { width: 1.91, height: 1 },
+      '4:5': { width: 4, height: 5 }
+    }
+
+    const baseRatio = ratioMap[selectedRatio]
+    return {
+      width: baseRatio.width * slides,
+      height: baseRatio.height
+    }
+  }, [selectedRatio, slides])
+
+  useEffect(() => {
+    const updateFrameSize = () => {
+      const container = containerRef.current
+      if (!container) return
+
+      const containerWidth = container.clientWidth
+      const containerHeight = container.clientHeight
+      const aspectRatio = frameRatio.width / frameRatio.height
+
+      // Calculate both possible dimensions
+      const heightIfWidthIs100 = containerWidth / aspectRatio
+
+      if (heightIfWidthIs100 <= containerHeight) {
+        // Use full width
+        setFrameStyle({
+          width: '100%',
+          height: 'auto',
+        })
+      } else {
+        // Use full height
+        setFrameStyle({
+          width: 'auto',
+          height: '100%',
+        })
+      }
+    }
+
+    updateFrameSize()
+    window.addEventListener('resize', updateFrameSize)
+    return () => window.removeEventListener('resize', updateFrameSize)
+  }, [frameRatio])
 
   return (
     <main className="w-[min(100%,1024px)] mx-auto px-4 min-h-screen pt-20 pb-16">
@@ -77,9 +125,17 @@ export const Main = () => {
               className="w-16 px-2 py-1 text-center border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent"
             />
           </div>
+
+          <div className="text-sm text-gray-500">
+            Final ratio: {frameRatio.width}:{frameRatio.height}
+          </div>
         </div>
         
-        <div id="container" className="w-full bg-gray-100 relative overflow-hidden">
+        <div 
+          ref={containerRef}
+          id="container" 
+          className="w-full h-[600px] bg-gray-100 relative overflow-hidden"
+        >
           {selectedImage ? (
             <>
               <img 
@@ -89,7 +145,11 @@ export const Main = () => {
               />
               <div 
                 id="frame" 
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[200px] border-2 border-white"
+                className="absolute top-0 left-0 border-2 border-white"
+                style={{
+                  ...frameStyle,
+                  aspectRatio: `${frameRatio.width}/${frameRatio.height}`,
+                }}
               />
             </>
           ) : (
