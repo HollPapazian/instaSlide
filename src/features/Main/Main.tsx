@@ -1,4 +1,5 @@
 import { useState, ChangeEvent, useMemo, useRef, useEffect } from 'react'
+import { Frame } from '../../components/Frame/Frame'
 
 type AspectRatio = '1:1' | '1.91:1' | '4:5'
 
@@ -70,21 +71,6 @@ export const Main = () => {
     return () => window.removeEventListener('resize', updateFrameSize)
   }, [frameRatio])
 
-  const renderDividers = () => {
-    const dividers = []
-    for (let i = 1; i < slides; i++) {
-      const percentage = (i / slides) * 100
-      dividers.push(
-        <div
-          key={i}
-          className="absolute top-0 bottom-0 border-l-1 border-blue-500/70"
-          style={{ left: `${percentage}%` }}
-        />
-      )
-    }
-    return dividers
-  }
-
   return (
     <main className="w-[min(100%,1024px)] mx-auto px-4 min-h-screen pt-20 pb-16">
       <div className="flex flex-col gap-4">
@@ -145,7 +131,7 @@ export const Main = () => {
         <div 
           ref={containerRef}
           id="container" 
-          className="w-full bg-gray-100 relative overflow-hidden"
+          className="w-full min-h-[50px] bg-gray-100 relative overflow-hidden"
         >
           {selectedImage ? (
             <>
@@ -154,16 +140,13 @@ export const Main = () => {
                 alt="Uploaded preview" 
                 className="max-w-full h-auto mx-auto"
               />
-              <div 
-                id="frame" 
-                className="absolute top-0 left-0 border-2 border-blue-500/70"
-                style={{
-                  ...frameStyle,
-                  aspectRatio: `${frameRatio.width}/${frameRatio.height}`,
-                }}
-              >
-                {renderDividers()}
-              </div>
+              <Frame 
+                width={frameStyle.width}
+                height={frameStyle.height}
+                aspectRatio={frameRatio.width / frameRatio.height}
+                slides={slides}
+                containerRef={containerRef}
+              />
             </>
           ) : (
             <div className="h-64 flex items-center justify-center text-gray-400">
