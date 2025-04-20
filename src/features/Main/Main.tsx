@@ -146,6 +146,7 @@ export const Main = () => {
                 aspectRatio={frameRatio.width / frameRatio.height}
                 slides={slides}
                 containerRef={containerRef}
+                imageUrl={selectedImage}
               />
             </>
           ) : (
