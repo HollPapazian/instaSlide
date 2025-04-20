@@ -70,6 +70,21 @@ export const Main = () => {
     return () => window.removeEventListener('resize', updateFrameSize)
   }, [frameRatio])
 
+  const renderDividers = () => {
+    const dividers = []
+    for (let i = 1; i < slides; i++) {
+      const percentage = (i / slides) * 100
+      dividers.push(
+        <div
+          key={i}
+          className="absolute top-0 bottom-0 border-l-1 border-blue-500/70"
+          style={{ left: `${percentage}%` }}
+        />
+      )
+    }
+    return dividers
+  }
+
   return (
     <main className="w-[min(100%,1024px)] mx-auto px-4 min-h-screen pt-20 pb-16">
       <div className="flex flex-col gap-4">
@@ -125,16 +140,12 @@ export const Main = () => {
               className="w-16 px-2 py-1 text-center border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent"
             />
           </div>
-
-          <div className="text-sm text-gray-500">
-            Final ratio: {frameRatio.width}:{frameRatio.height}
-          </div>
         </div>
         
         <div 
           ref={containerRef}
           id="container" 
-          className="w-full h-[600px] bg-gray-100 relative overflow-hidden"
+          className="w-full bg-gray-100 relative overflow-hidden"
         >
           {selectedImage ? (
             <>
@@ -145,12 +156,14 @@ export const Main = () => {
               />
               <div 
                 id="frame" 
-                className="absolute top-0 left-0 border-2 border-white"
+                className="absolute top-0 left-0 border-2 border-blue-500/70"
                 style={{
                   ...frameStyle,
                   aspectRatio: `${frameRatio.width}/${frameRatio.height}`,
                 }}
-              />
+              >
+                {renderDividers()}
+              </div>
             </>
           ) : (
             <div className="h-64 flex items-center justify-center text-gray-400">
