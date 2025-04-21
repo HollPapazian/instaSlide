@@ -1,5 +1,6 @@
 import { Rnd } from 'react-rnd'
 import { useEffect, useState, RefObject } from 'react'
+import { FrameDividers } from '../FrameDividers/FrameDividers'
 
 interface FrameProps {
     width?: string;
@@ -38,21 +39,6 @@ export const Frame = ({ width, height, aspectRatio, slides, containerRef, imageU
             }
         }
     }, [width, height, aspectRatio, containerRef])
-
-    const renderDividers = () => {
-        const dividers = []
-        for (let i = 1; i < slides; i++) {
-            const percentage = (i / slides) * 100
-            dividers.push(
-                <div
-                    key={i}
-                    className="absolute top-0 bottom-0 border-l-1 border-blue-500/70"
-                    style={{ left: `${percentage}%` }}
-                />
-            )
-        }
-        return dividers
-    }
 
     const handleResize = (e: any, direction: any, ref: any, delta: any, position: any) => {
         const newWidth = ref.offsetWidth
@@ -193,7 +179,7 @@ export const Frame = ({ width, height, aspectRatio, slides, containerRef, imageU
                         boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.6)'
                     }}
                 />
-                {renderDividers()}
+                <FrameDividers slidesCount={slides} />
             </Rnd>
 
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">

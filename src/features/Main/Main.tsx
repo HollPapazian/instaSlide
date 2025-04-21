@@ -129,7 +129,6 @@ export const Main = () => {
               className="w-16 px-2 py-1 text-center border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent"
             />
           </div>
-
         </div>
         
         <div 
