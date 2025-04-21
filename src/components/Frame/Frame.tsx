@@ -1,10 +1,9 @@
 import { Rnd } from 'react-rnd'
-import { useEffect, useState, RefObject } from 'react'
+import { useEffect, useState, RefObject, useMemo } from 'react'
 import { FrameDividers } from '../FrameDividers/FrameDividers'
+import { useStore } from '../../store/useStore'
 
 interface FrameProps {
-    aspectRatio: number;
-    slides: number;
     containerRef: RefObject<HTMLDivElement>;
     imageUrl: string;
     isImageLoaded: boolean;
@@ -15,12 +14,29 @@ interface CroppedImage {
     index: number;
 }
 
-export const Frame = ({ aspectRatio, slides, containerRef, isImageLoaded, imageUrl }: FrameProps) => {
+export const Frame = ({ containerRef, isImageLoaded, imageUrl }: FrameProps) => {
+    const { selectedRatio, slides } = useStore()
     const [size, setSize] = useState({ width: 0, height: 0 })
     const [position, setPosition] = useState({ x: 0, y: 0 })
     const [croppedImages, setCroppedImages] = useState<CroppedImage[]>([])
     const [isProcessing, setIsProcessing] = useState(false)
     const [frameStyle, setFrameStyle] = useState<{ width?: string; height?: string }>({})
+
+    const frameRatio = useMemo(() => {
+        const ratioMap = {
+            '1:1': { width: 1, height: 1 },
+            '1.91:1': { width: 1.91, height: 1 },
+            '4:5': { width: 4, height: 5 }
+        }
+
+        const baseRatio = ratioMap[selectedRatio]
+        return {
+            width: baseRatio.width * slides,
+            height: baseRatio.height
+        }
+    }, [selectedRatio, slides])
+
+    const aspectRatio = frameRatio.width / frameRatio.height
 
     useEffect(() => {
         const updateFrameSize = () => {
