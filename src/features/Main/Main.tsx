@@ -5,6 +5,7 @@ type AspectRatio = '1:1' | '1.91:1' | '4:5'
 
 export const Main = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [isImageLoaded, setIsImageLoaded] = useState(false)
   const [selectedRatio, setSelectedRatio] = useState<AspectRatio>('1:1')
   const [slides, setSlides] = useState(3)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -40,25 +41,26 @@ export const Main = () => {
   }, [selectedRatio, slides])
 
   useEffect(() => {
+    setIsImageLoaded(false)
+  }, [selectedImage])
+
+  useEffect(() => {
     const updateFrameSize = () => {
       const container = containerRef.current
-      if (!container) return
+      if (!container || !isImageLoaded) return
 
       const containerWidth = container.clientWidth
       const containerHeight = container.clientHeight
       const aspectRatio = frameRatio.width / frameRatio.height
 
-      // Calculate both possible dimensions
       const heightIfWidthIs100 = containerWidth / aspectRatio
 
       if (heightIfWidthIs100 <= containerHeight) {
-        // Use full width
         setFrameStyle({
           width: '100%',
           height: 'auto',
         })
       } else {
-        // Use full height
         setFrameStyle({
           width: 'auto',
           height: '100%',
@@ -69,7 +71,8 @@ export const Main = () => {
     updateFrameSize()
     window.addEventListener('resize', updateFrameSize)
     return () => window.removeEventListener('resize', updateFrameSize)
-  }, [frameRatio])
+  }, [frameRatio, isImageLoaded])
+
 
   return (
     <main className="w-[min(100%,1024px)] mx-auto px-4 min-h-screen pt-20 pb-16">
@@ -126,6 +129,7 @@ export const Main = () => {
               className="w-16 px-2 py-1 text-center border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent"
             />
           </div>
+
         </div>
         
         <div 
@@ -139,15 +143,18 @@ export const Main = () => {
                 src={selectedImage} 
                 alt="Uploaded preview" 
                 className="max-w-full h-auto mx-auto"
+                onLoad={() => setIsImageLoaded(true)}
               />
-              <Frame 
-                width={frameStyle.width}
-                height={frameStyle.height}
-                aspectRatio={frameRatio.width / frameRatio.height}
-                slides={slides}
-                containerRef={containerRef}
-                imageUrl={selectedImage}
-              />
+              {isImageLoaded && (
+                <Frame 
+                  width={frameStyle.width}
+                  height={frameStyle.height}
+                  aspectRatio={frameRatio.width / frameRatio.height}
+                  slides={slides}
+                  containerRef={containerRef}
+                  imageUrl={selectedImage}
+                />
+              )}
             </>
           ) : (
             <div className="h-64 flex items-center justify-center text-gray-400">
