@@ -4,6 +4,7 @@ import { useStore } from '../../store/useStore'
 import { FileSelector } from '../../components/FileSelector/FileSelector'
 import { RatioSelector } from '../../components/RatioSelector/RatioSelector'
 import { SlidesSelector } from '../../components/SlidesSelector/SlidesSelector'
+import { CropAndSlice } from '../../components/CropAndSlice/CropAndSlice'
 
 export const Main = () => {
   const {
@@ -37,7 +38,6 @@ export const Main = () => {
               {isImageLoaded && (
                 <Frame
                   containerRef={containerRef}
-                  imageUrl={selectedImage}
                   isImageLoaded={isImageLoaded}
                 />
               )}
@@ -48,6 +48,7 @@ export const Main = () => {
             </div>
           )}
         </div>
+        <CropAndSlice containerRef={containerRef} />
       </div>
     </main>
   )
