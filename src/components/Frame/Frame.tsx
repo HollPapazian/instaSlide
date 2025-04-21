@@ -3,12 +3,11 @@ import { useEffect, useState, RefObject } from 'react'
 import { FrameDividers } from '../FrameDividers/FrameDividers'
 
 interface FrameProps {
-    width?: string;
-    height?: string;
     aspectRatio: number;
     slides: number;
-    containerRef: RefObject<HTMLDivElement | null>;
+    containerRef: RefObject<HTMLDivElement>;
     imageUrl: string;
+    isImageLoaded: boolean;
 }
 
 interface CroppedImage {
@@ -16,35 +15,62 @@ interface CroppedImage {
     index: number;
 }
 
-export const Frame = ({ width, height, aspectRatio, slides, containerRef, imageUrl }: FrameProps) => {
+export const Frame = ({ aspectRatio, slides, containerRef, isImageLoaded, imageUrl }: FrameProps) => {
     const [size, setSize] = useState({ width: 0, height: 0 })
     const [position, setPosition] = useState({ x: 0, y: 0 })
     const [croppedImages, setCroppedImages] = useState<CroppedImage[]>([])
     const [isProcessing, setIsProcessing] = useState(false)
+    const [frameStyle, setFrameStyle] = useState<{ width?: string; height?: string }>({})
 
     useEffect(() => {
-        if (containerRef.current && (width === '100%' || height === '100%')) {
+        const updateFrameSize = () => {
+            const container = containerRef.current
+            if (!container || !isImageLoaded) return
+
+            const containerWidth = container.clientWidth
+            const containerHeight = container.clientHeight
+            const heightIfWidthIs100 = containerWidth / aspectRatio
+
+            if (heightIfWidthIs100 <= containerHeight) {
+                setFrameStyle({
+                    width: '100%',
+                    height: 'auto',
+                })
+            } else {
+                setFrameStyle({
+                    width: 'auto',
+                    height: '100%',
+                })
+            }
+        }
+
+        updateFrameSize()
+        window.addEventListener('resize', updateFrameSize)
+        return () => window.removeEventListener('resize', updateFrameSize)
+    }, [aspectRatio, containerRef, isImageLoaded])
+
+    useEffect(() => {
+        if (containerRef.current && (frameStyle.width === '100%' || frameStyle.height === '100%')) {
             const container = containerRef.current
             const containerWidth = container.clientWidth
             const containerHeight = container.clientHeight
 
-            if (width === '100%') {
+            if (frameStyle.width === '100%') {
                 const newWidth = containerWidth
                 const newHeight = newWidth / aspectRatio
                 setSize({ width: newWidth, height: newHeight })
-            } else if (height === '100%') {
+            } else if (frameStyle.height === '100%') {
                 const newHeight = containerHeight
                 const newWidth = newHeight * aspectRatio
                 setSize({ width: newWidth, height: newHeight })
             }
         }
-    }, [width, height, aspectRatio, containerRef])
+    }, [frameStyle, aspectRatio, containerRef])
 
     const handleResize = (e: any, direction: any, ref: any, delta: any, position: any) => {
         const newWidth = ref.offsetWidth
         const newHeight = ref.offsetHeight
 
-        // Maintain aspect ratio during resize
         if (direction.includes('left') || direction.includes('right')) {
             const height = newWidth / aspectRatio
             setSize({ width: newWidth, height })

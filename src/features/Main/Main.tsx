@@ -5,11 +5,10 @@ type AspectRatio = '1:1' | '1.91:1' | '4:5'
 
 export const Main = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
-  const [isImageLoaded, setIsImageLoaded] = useState(false)
   const [selectedRatio, setSelectedRatio] = useState<AspectRatio>('1:1')
   const [slides, setSlides] = useState(3)
   const containerRef = useRef<HTMLDivElement>(null)
-  const [frameStyle, setFrameStyle] = useState<{ width?: string; height?: string }>({})
+  const [isImageLoaded, setIsImageLoaded] = useState(false)
 
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -43,36 +42,6 @@ export const Main = () => {
   useEffect(() => {
     setIsImageLoaded(false)
   }, [selectedImage])
-
-  useEffect(() => {
-    const updateFrameSize = () => {
-      const container = containerRef.current
-      if (!container || !isImageLoaded) return
-
-      const containerWidth = container.clientWidth
-      const containerHeight = container.clientHeight
-      const aspectRatio = frameRatio.width / frameRatio.height
-
-      const heightIfWidthIs100 = containerWidth / aspectRatio
-
-      if (heightIfWidthIs100 <= containerHeight) {
-        setFrameStyle({
-          width: '100%',
-          height: 'auto',
-        })
-      } else {
-        setFrameStyle({
-          width: 'auto',
-          height: '100%',
-        })
-      }
-    }
-
-    updateFrameSize()
-    window.addEventListener('resize', updateFrameSize)
-    return () => window.removeEventListener('resize', updateFrameSize)
-  }, [frameRatio, isImageLoaded])
-
 
   return (
     <main className="w-[min(100%,1024px)] mx-auto px-4 min-h-screen pt-20 pb-16">
@@ -130,28 +99,27 @@ export const Main = () => {
             />
           </div>
         </div>
-        
-        <div 
+
+        <div
           ref={containerRef}
-          id="container" 
+          id="container"
           className="w-full min-h-[50px] bg-gray-100 relative overflow-hidden"
         >
           {selectedImage ? (
             <>
-              <img 
-                src={selectedImage} 
-                alt="Uploaded preview" 
+              <img
+                src={selectedImage}
+                alt="Uploaded preview"
                 className="max-w-full h-auto mx-auto"
                 onLoad={() => setIsImageLoaded(true)}
               />
               {isImageLoaded && (
-                <Frame 
-                  width={frameStyle.width}
-                  height={frameStyle.height}
+                <Frame
                   aspectRatio={frameRatio.width / frameRatio.height}
                   slides={slides}
                   containerRef={containerRef}
                   imageUrl={selectedImage}
+                  isImageLoaded={isImageLoaded}
                 />
               )}
             </>
