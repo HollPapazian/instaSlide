@@ -18,7 +18,7 @@ export const CropAndSlice = ({ containerRef }: CropAndSliceProps) => {
     const cropAndSplit = async () => {
         if (!containerRef.current || !selectedImage) return
         setIsProcessing(true)
-
+        setCroppedImages([])
         try {
             // Load the original image
             const img = new Image()
@@ -100,26 +100,25 @@ export const CropAndSlice = ({ containerRef }: CropAndSliceProps) => {
     }
 
     return (
-        <div className="flex gap-2 z-20">
-            {croppedImages.length === 0 ? (
-                <button
-                    onClick={cropAndSplit}
-                    disabled={isProcessing}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    {isProcessing ? 'Processing...' : 'Crop and Split'}
-                </button>
-            ) : (
-                croppedImages.map((img) => (
+        <div className="flex flex-col gap-2 z-20 items-start">
+            <button
+                onClick={cropAndSplit}
+                disabled={isProcessing || !selectedImage}
+                className="w-fit px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+                {isProcessing ? 'Processing...' : 'Crop and Split'}
+            </button>
+            <div className="flex flex-col gap-2">
+                {croppedImages.map((img) => (
                     <button
                         key={img.index}
                         onClick={() => downloadImage(img.url, img.index)}
-                        className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                        className="w-fit px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
                     >
                         Download Slide {img.index}
                     </button>
-                ))
-            )}
+                ))}
+            </div>
         </div>
     )
 } 
