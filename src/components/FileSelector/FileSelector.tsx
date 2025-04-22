@@ -1,8 +1,15 @@
 import { ChangeEvent } from 'react'
-import { useStore } from '../../store/useStore'
+import { useStore, type ImageFormat } from '../../store/useStore'
+
+const getMimeType = (file: File): ImageFormat => {
+  const supportedFormats: ImageFormat[] = ['image/png', 'image/jpeg', 'image/webp', 'image/bmp']
+  return supportedFormats.includes(file.type as ImageFormat) 
+    ? file.type as ImageFormat 
+    : 'image/jpeg'
+}
 
 export const FileSelector = () => {
-  const { setSelectedImage, setIsImageLoaded } = useStore()
+  const { setSelectedImage, setIsImageLoaded, setSelectedFormat } = useStore()
 
   const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
     setIsImageLoaded(false)
@@ -10,6 +17,7 @@ export const FileSelector = () => {
     if (file && file.type.startsWith('image/')) {
       const imageUrl = URL.createObjectURL(file)
       setSelectedImage(imageUrl)
+      setSelectedFormat(getMimeType(file))
     }
   }
 

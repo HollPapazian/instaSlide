@@ -50,6 +50,7 @@ export const Frame = ({ containerRef, isImageLoaded }: FrameProps) => {
                     height: '100%',
                 })
             }
+            setPosition({ x: 0, y: 0 })
         }
 
         updateFrameSize()
@@ -88,6 +89,10 @@ export const Frame = ({ containerRef, isImageLoaded }: FrameProps) => {
         }
         setPosition(position)
     }
+
+    // useEffect(() => {
+    //     setPosition({ x: 0, y: 0 })
+    // }, [aspectRatio])
 
     return (
         <Rnd
