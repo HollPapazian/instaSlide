@@ -1,6 +1,4 @@
-import { useStore } from '../../store/useStore'
-
-type AspectRatio = '1:1' | '1.91:1' | '4:5'
+import { useStore, type AspectRatio } from '../../store/useStore'
 
 export const RatioSelector = () => {
   const { selectedRatio, setSelectedRatio } = useStore()

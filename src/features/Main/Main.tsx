@@ -4,8 +4,8 @@ import { useStore } from '../../store/useStore'
 import { FileSelector } from '../../components/FileSelector/FileSelector'
 import { RatioSelector } from '../../components/RatioSelector/RatioSelector'
 import { SlidesSelector } from '../../components/SlidesSelector/SlidesSelector'
+import { FormatSelector } from '../../components/FormatSelector/FormatSelector'
 import { CropAndSlice } from '../../components/CropAndSlice/CropAndSlice'
-import { ResetButton } from '../../components/ResetButton/ResetButton'
 
 export const Main = () => {
   const {
@@ -18,13 +18,11 @@ export const Main = () => {
   return (
     <main className="w-[min(100%,1024px)] mx-auto px-4 min-h-screen pt-20 pb-16">
       <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col gap-4">
-            <FileSelector />
-            <RatioSelector />
-            <SlidesSelector />
-          </div>
-          <ResetButton />
+        <div className="flex flex-col gap-4">
+          <FileSelector />
+          <RatioSelector />
+          <SlidesSelector />
+          <FormatSelector />
         </div>
 
         <div

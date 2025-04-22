@@ -10,8 +10,23 @@ interface CroppedImage {
     index: number
 }
 
+const getFileExtension = (mimeType: string): string => {
+    switch (mimeType) {
+        case 'image/jpeg':
+            return 'jpg'
+        case 'image/png':
+            return 'png'
+        case 'image/webp':
+            return 'webp'
+        case 'image/bmp':
+            return 'bmp'
+        default:
+            return 'png'
+    }
+}
+
 export const CropAndSlice = ({ containerRef }: CropAndSliceProps) => {
-    const { size, position, slides, selectedImage } = useStore()
+    const { size, position, slides, selectedImage, selectedFormat } = useStore()
     const [croppedImages, setCroppedImages] = useState<CroppedImage[]>([])
     const [isProcessing, setIsProcessing] = useState(false)
 
@@ -75,9 +90,10 @@ export const CropAndSlice = ({ containerRef }: CropAndSliceProps) => {
                     0, 0, slideWidth, cropHeight
                 )
 
-                // Convert to data URL
+                // Convert to data URL with selected format
+                const quality = selectedFormat === 'image/jpeg' || selectedFormat === 'image/webp' ? 1.0 : undefined
                 newCroppedImages.push({
-                    url: slideCanvas.toDataURL('image/png'),
+                    url: slideCanvas.toDataURL(selectedFormat, quality),
                     index: i + 1
                 })
             }
@@ -93,7 +109,7 @@ export const CropAndSlice = ({ containerRef }: CropAndSliceProps) => {
     const downloadImage = (url: string, index: number) => {
         const link = document.createElement('a')
         link.href = url
-        link.download = `slide-${index}.png`
+        link.download = `slide-${index}.${getFileExtension(selectedFormat)}`
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)

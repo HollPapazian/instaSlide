@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 
-type AspectRatio = '1:1' | '1.91:1' | '4:5'
+export type AspectRatio = '1:1' | '1.91:1' | '4:5'
+export type ImageFormat = 'image/png' | 'image/jpeg' | 'image/webp' | 'image/bmp'
 
 interface Size {
   width: number
@@ -15,6 +16,7 @@ interface Position {
 const initialState = {
   selectedImage: null,
   selectedRatio: '1:1' as AspectRatio,
+  selectedFormat: 'image/png' as ImageFormat,
   slides: 3,
   isImageLoaded: false,
   size: { width: 0, height: 0 },
@@ -24,12 +26,14 @@ const initialState = {
 interface Store {
   selectedImage: string | null
   selectedRatio: AspectRatio
+  selectedFormat: ImageFormat
   slides: number
   isImageLoaded: boolean
   size: Size
   position: Position
   setSelectedImage: (image: string | null) => void
   setSelectedRatio: (ratio: AspectRatio) => void
+  setSelectedFormat: (format: ImageFormat) => void
   setSlides: (slides: number) => void
   setIsImageLoaded: (loaded: boolean) => void
   setSize: (size: Size) => void
@@ -42,6 +46,7 @@ export const useStore = create<Store>((set, get) => ({
   ...initialState,
   setSelectedImage: (image) => set({ selectedImage: image }),
   setSelectedRatio: (ratio) => set({ selectedRatio: ratio }),
+  setSelectedFormat: (format) => set({ selectedFormat: format }),
   setSlides: (slides) => set({ slides }),
   setIsImageLoaded: (loaded) => set({ isImageLoaded: loaded }),
   setSize: (size) => set({ size }),
@@ -51,6 +56,7 @@ export const useStore = create<Store>((set, get) => ({
     const state = get()
     return (
       state.selectedRatio === initialState.selectedRatio &&
+      state.selectedFormat === initialState.selectedFormat &&
       state.slides === initialState.slides &&
       state.size.width === initialState.size.width &&
       state.size.height === initialState.size.height &&
