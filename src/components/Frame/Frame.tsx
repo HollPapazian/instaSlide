@@ -76,7 +76,7 @@ export const Frame = ({ containerRef, isImageLoaded }: FrameProps) => {
         }
     }, [frameStyle, aspectRatio, containerRef, setSize])
 
-    const handleResize = (e: any, direction: any, ref: any, delta: any, position: any) => {
+    const handleResize = (_e: any, direction: any, ref: any, _delta: any, position: any) => {
         const newWidth = ref.offsetWidth
         const newHeight = ref.offsetHeight
 
@@ -90,15 +90,11 @@ export const Frame = ({ containerRef, isImageLoaded }: FrameProps) => {
         setPosition(position)
     }
 
-    // useEffect(() => {
-    //     setPosition({ x: 0, y: 0 })
-    // }, [aspectRatio])
-
     return (
         <Rnd
             size={size}
             position={position}
-            onDragStop={(e, d) => {
+            onDragStop={(_e, d) => {
                 setPosition({ x: d.x, y: d.y })
             }}
             onResize={handleResize}
