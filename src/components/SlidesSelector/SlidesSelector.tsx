@@ -1,13 +1,17 @@
-import { ChangeEvent } from 'react'
 import { useStore } from '../../store/useStore'
 
 export const SlidesSelector = () => {
   const { slides, setSlides } = useStore()
 
-  const handleSlidesChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(event.target.value)
-    if (value >= 1 && value <= 10) {
-      setSlides(value)
+  const increment = () => {
+    if (slides < 10) {
+      setSlides(slides + 1)
+    }
+  }
+
+  const decrement = () => {
+    if (slides > 1) {
+      setSlides(slides - 1)
     }
   }
 
@@ -16,15 +20,29 @@ export const SlidesSelector = () => {
       <label htmlFor="slides" className="text-sm font-medium text-gray-700">
         Slides:
       </label>
-      <input
-        id="slides"
-        type="number"
-        min="1"
-        max="10"
-        value={slides}
-        onChange={handleSlidesChange}
-        className="w-16 px-2 py-1 text-center border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-800 focus:border-transparent"
-      />
+      <div className="flex items-center">
+        <button
+          onClick={decrement}
+          className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-l-lg border border-gray-300 font-medium"
+          aria-label="Decrease slides"
+        >
+          -
+        </button>
+        <input
+          id="slides"
+          type="number"
+          readOnly
+          value={slides}
+          className="w-12 px-2 py-1 text-center border-y border-gray-300 focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+        />
+        <button
+          onClick={increment}
+          className="px-3 py-1 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-r-lg border border-gray-300 font-medium"
+          aria-label="Increase slides"
+        >
+          +
+        </button>
+      </div>
     </div>
   )
 } 
