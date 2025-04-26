@@ -5,8 +5,10 @@ export const Instructions = () => {
       <div className="flex flex-col md:flex-row gap-8">
         <div className="border-2 border-gray-300 rounded-[1rem] p-2 md:p-1 bg-white order-2 md:order-1">
           <img 
-            src="/assets/preview.gif" 
+            src="/assets/preview_3.webp" 
             alt="InstaSlide preview" 
+            loading="lazy"
+            decoding="async"
             className="w-full md:w-[300px] h-auto rounded-[1.5rem] object-cover"
           />
         </div>
