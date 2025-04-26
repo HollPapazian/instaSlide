@@ -6,6 +6,7 @@ import { RatioSelector } from '../../components/RatioSelector/RatioSelector'
 import { SlidesSelector } from '../../components/SlidesSelector/SlidesSelector'
 import { FormatSelector } from '../../components/FormatSelector/FormatSelector'
 import { CropAndSlice } from '../../components/CropAndSlice/CropAndSlice'
+import { Instructions } from '../../components/Instructions/Instructions'
 
 export const Main = () => {
   const {
@@ -16,7 +17,7 @@ export const Main = () => {
   const containerRef = useRef<HTMLDivElement>(null!)
 
   return (
-    <main className="w-[min(100%,1024px)] mx-auto px-4 min-h-screen pt-20 pb-16">
+    <main className="w-[min(100%,1024px)] mx-auto px-4 min-h-screen pt-22 pb-16">
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-4">
           <FileSelector />
@@ -46,12 +47,13 @@ export const Main = () => {
               )}
             </>
           ) : (
-            <div className="h-64 flex items-center justify-center text-gray-400">
+            <div className="h-32 flex items-center justify-center text-gray-400">
               Upload an image to see preview
             </div>
           )}
         </div>
         <CropAndSlice containerRef={containerRef} />
+        <Instructions />
       </div>
     </main>
   )
