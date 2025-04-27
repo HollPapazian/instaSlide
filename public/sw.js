@@ -6,6 +6,7 @@ const assetsToCache = [
   '/index.html',
   '/manifest.json',
   '/assets/logo_mini.webp',
+  '/assets/preview_3.webp',
   '/icons/icon-180x180.png'
 ];
 
@@ -43,7 +44,18 @@ self.addEventListener('activate', (event) => {
 // Helper function to check if a request should be cached
 const shouldCache = (url) => {
   const parsedUrl = new URL(url);
-  // Only cache same-origin requests with supported schemes
+  
+  // Always cache specific assets
+  const alwaysCachePatterns = [
+    '/assets/logo_mini.webp',
+    '/assets/preview_3.webp'
+  ];
+  
+  if (alwaysCachePatterns.some(pattern => parsedUrl.pathname.endsWith(pattern))) {
+    return true;
+  }
+
+  // For other requests, only cache same-origin requests with supported schemes
   return (parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:') &&
          (parsedUrl.origin === self.location.origin);
 };
