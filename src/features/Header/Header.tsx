@@ -1,3 +1,5 @@
+import { InstallPWA } from './InstallPWA'
+
 export const Header = () => {
   return (
     <header className="bg-gray-800 text-white py-4 fixed left-0 right-0 top-0 w-full z-50">
@@ -6,6 +8,7 @@ export const Header = () => {
           <img src="/assets/logo_mini.webp" alt="instaslide logo" className="h-10 w-auto" />
           <h1 className="text-2xl font-bold">InstaSlide</h1>
         </div>
+        <InstallPWA />
       </div>
     </header>
   )
