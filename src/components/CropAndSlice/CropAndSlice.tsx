@@ -25,15 +25,26 @@ const getFileExtension = (mimeType: string): string => {
     }
 }
 
+const formatTimeForId = (): string => {
+    const now = new Date()
+    const hours = now.getHours().toString().padStart(2, '0')
+    const minutes = now.getMinutes().toString().padStart(2, '0')
+    const seconds = now.getSeconds().toString().padStart(2, '0')
+    return `${hours}-${minutes}-${seconds}`
+}
+
 export const CropAndSlice = ({ containerRef }: CropAndSliceProps) => {
     const { size, position, slides, selectedImage, selectedFormat } = useStore()
     const [croppedImages, setCroppedImages] = useState<CroppedImage[]>([])
     const [isProcessing, setIsProcessing] = useState(false)
+    const [currentSetId, setCurrentSetId] = useState<string>('')
 
     const cropAndSplit = async () => {
         if (!containerRef.current || !selectedImage) return
         setIsProcessing(true)
         setCroppedImages([])
+        const newSetId = formatTimeForId()
+        setCurrentSetId(newSetId)
         try {
             // Load the original image
             const img = new Image()
@@ -109,10 +120,17 @@ export const CropAndSlice = ({ containerRef }: CropAndSliceProps) => {
     const downloadImage = (url: string, index: number) => {
         const link = document.createElement('a')
         link.href = url
-        link.download = `slide-${index}.${getFileExtension(selectedFormat)}`
+        link.download = `slide-${currentSetId}-${index.toString().padStart(2, '0')}.${getFileExtension(selectedFormat)}`
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
+    }
+
+    const downloadAll = async () => {
+        for (const img of croppedImages) {
+            await new Promise(resolve => setTimeout(resolve, 100))
+            downloadImage(img.url, img.index)
+        }
     }
 
     return (
@@ -125,6 +143,14 @@ export const CropAndSlice = ({ containerRef }: CropAndSliceProps) => {
                 {isProcessing ? 'Processing...' : 'Crop and Split'}
             </button>
             <div className="flex flex-col gap-2">
+                {croppedImages.length > 0 && (
+                    <button
+                        onClick={downloadAll}
+                        className="w-fit px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600"
+                    >
+                        Download All Slides
+                    </button>
+                )}
                 {croppedImages.map((img) => (
                     <button
                         key={img.index}
