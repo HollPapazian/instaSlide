@@ -1,17 +1,15 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import type { ViteDevServer } from 'vite'
-import type { Connect } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), {
     name: 'configure-response-headers',
     configureServer(server: ViteDevServer) {
-      server.middlewares.use((req: Connect.IncomingMessage, res: Connect.ServerResponse, next: Connect.NextFunction) => {
+      server.middlewares.use((req: any, res: any, next: any) => {
         // Set cache headers for specific assets
-        const reqUrl = (req as any).url || '';
-        if (reqUrl.match(/\/(assets\/logo_mini\.webp|assets\/preview_3\.webp)$/)) {
+        if (req.url?.match(/\/(assets\/logo_mini\.webp|assets\/preview_3\.webp)$/)) {
           res.setHeader('Cache-Control', 'public, max-age=86400'); // Cache for 1 day
           res.setHeader('Expires', new Date(Date.now() + 86400000).toUTCString());
         }
