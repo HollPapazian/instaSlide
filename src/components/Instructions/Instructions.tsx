@@ -1,16 +1,13 @@
+import PhonePreview from '../PhonePreview/PhonePreview';
+// import '../../styles/animations.css';
+
 export const Instructions = () => {
   return (
     <div className="mt-4 p-6 bg-gray-50 rounded-lg">
       <h2 className="text-xl font-bold text-gray-800 mb-4">How and Why to use InstaSlide</h2>
       <div className="flex flex-col md:flex-row gap-8">
-        <div className="border-2 border-gray-300 rounded-[1rem] p-2 md:p-1 bg-white order-2 md:order-1">
-          <img 
-            src="/assets/preview_3.webp" 
-            alt="InstaSlide preview" 
-            loading="lazy"
-            decoding="async"
-            className="w-full md:w-[300px] h-auto rounded-[1.5rem] object-cover"
-          />
+        <div className="flex justify-center order-2 md:order-1">
+          <PhonePreview />
         </div>
         <div className="order-1 md:order-2">
           <ul className="space-y-3 text-gray-600">
