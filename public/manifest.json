@@ -59,14 +59,14 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshots/d2.png",
+      "src": "/screenshots/d2.webp",
       "sizes": "2226x2790",
       "type": "image/png",
       "form_factor": "wide",
       "label": "InstaSlide Desktop View"
     },
     {
-      "src": "/screenshots/mobile-1.png",
+      "src": "/screenshots/mobile-1.webp",
       "sizes": "474x946",
       "type": "image/png",
       "form_factor": "narrow",
