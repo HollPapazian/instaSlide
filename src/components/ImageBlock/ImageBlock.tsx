@@ -51,7 +51,7 @@ export const ImageBlock = ({ containerRef }: ImageBlockProps) => {
             )}
           </>
         ) : (
-          <div className="h-32 flex items-center justify-center text-gray-400" onClick={handleContainerClick}>
+          <div className="h-32 flex items-center justify-center text-gray-900" onClick={handleContainerClick}>
             Click here to upload an image
           </div>
         )}

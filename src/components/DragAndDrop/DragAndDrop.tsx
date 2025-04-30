@@ -34,7 +34,8 @@ export const DragAndDrop = ({ children }: DragAndDropProps) => {
 
   return (
     <div {...getRootProps()} className="min-h-screen">
-      <input {...getInputProps()} />
+      <label htmlFor="fullScreenFileInput" className="sr-only">Upload image</label>
+      <input id="fullScreenFileInput" {...getInputProps()} />
       {isDragging && (
         <div 
           className="fixed inset-0 z-50 flex items-center justify-center transition-all duration-200"
