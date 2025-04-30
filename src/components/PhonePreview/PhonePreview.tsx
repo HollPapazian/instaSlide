@@ -90,7 +90,7 @@ const PhonePreview = () => {
               style={{ transform: `translateX(${(100 / TOTAL_SLIDES) * (-currentSlide)}%)` }}
             >
               <img 
-                src="/assets/landscape.svg"
+                src="/assets/landscape_mini.svg"
                 alt="Landscape preview"
                 className="w-full h-full object-cover"
                 style={{ aspectRatio: '15/4' }}
